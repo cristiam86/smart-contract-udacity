@@ -21,12 +21,18 @@ const createStar = async () => {
   const instance = await StarNotary.deployed();
   const name = document.getElementById("starName").value;
   const id = document.getElementById("starId").value;
-  await instance.createStar(name, id, {from: account});
-  App.setStatus("New Star Owner is " + account + ".");
+  const result = await instance.createStar(name, id, {from: account});
+  console.log('result: ', result)
+  App.setStatus(`New Star Owner is ${account}.`);
 }
 
 // Add a function lookUp to Lookup a star by ID using tokenIdToStarInfo()
-
+const lookUptokenIdToStarInfo = async () => {
+  const instance = await StarNotary.deployed();
+  const tokenId = document.getElementById("tokenId").value;
+  const result = await instance.lookUptokenIdToStarInfo(tokenId);
+  App.setStatus(`The Star name is ${result}.`);
+}
 //
 
 const App = {
@@ -35,6 +41,11 @@ const App = {
 
     // Bootstrap the MetaCoin abstraction for Use.
     StarNotary.setProvider(web3.currentProvider)
+    StarNotary.defaults({
+      from: account,
+      gas: 6721975,
+      gasPrice: 2000000000
+    });
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
@@ -63,6 +74,9 @@ const App = {
     createStar();
   },
 
+  lookUptokenIdToStarInfo: function() {
+    lookUptokenIdToStarInfo();
+  }
 }
 
 window.App = App
