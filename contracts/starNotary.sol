@@ -16,17 +16,17 @@ contract StarNotary is ERC721 {
     mapping(uint256 => Star) public tokenIdToStarInfo;
     mapping(uint256 => uint256) public starsForSale;
 
-    uint256[] public tokenIds;
+    // uint256[] public tokenIds;
 
-    function getTokenIds() public view returns (uint256[]){
-        return tokenIds;
-    }
+    // function getTokenIds() public view returns (uint256[]){
+    //     return tokenIds;
+    // }
 
     function createStar(string memory _name, uint256 _tokenId) public {
         Star memory newStar = Star(_name);
 
         tokenIdToStarInfo[_tokenId] = newStar;
-        tokenIds.push(_tokenId);
+        // tokenIds.push(_tokenId);
 
         _mint(msg.sender, _tokenId);
     }
@@ -64,7 +64,18 @@ contract StarNotary is ERC721 {
 
 // Add a function called exchangeStars, so 2 users can exchange their star tokens...
 //Do not worry about the price, just write code to exchange stars between users.
-    function exchangeStars(address _address1, address _address2) public {
+    function exchangeStars(uint256 _token1, uint256 _token2) public {
+        require(ownerOf(_token1) == msg.sender);
+        require(ownerOf(_token2) != msg.sender);
+
+        address otherParty = ownerOf(_token2);
+
+        require(ownerOf(_token1) != otherParty);
+
+        safeTransferFrom(msg.sender, otherParty, _token1);
+        unsafeTransfer(otherParty, msg.sender, _token2);
+        
+        /*
         for (uint i = 0; i < tokenIds.length; i++) {
             if(ownerOf(tokenIds[i]) == _address1) {
                 unsafeTransfer(_address1, _address2, tokenIds[i]);
@@ -72,6 +83,7 @@ contract StarNotary is ERC721 {
                 unsafeTransfer(_address2, _address1, tokenIds[i]);
             }
         }
+        */
         
     }
 

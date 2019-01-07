@@ -22,38 +22,24 @@ contract('StarNotary', async (accs) => {
     let tokenId1 = 1;
     let tokenId2 = 2;
     let tokenId3 = 3;
-    let tokenId4 = 4;
-    let tokenId5 = 5;
 
     await instance.createStar('awesome star 1', tokenId1, {from: user0})
     await instance.createStar('awesome star 2', tokenId2, {from: user0})
-    await instance.createStar('awesome star 3', tokenId3, {from: user0})
-
-    await instance.createStar('awesome star 4', tokenId4, {from: user1})
-    await instance.createStar('awesome star 5', tokenId5, {from: user1})
+    await instance.createStar('awesome star 3', tokenId3, {from: user1})
 
     assert.equal(await instance.ownerOf.call(tokenId1), user0)
     assert.equal(await instance.ownerOf.call(tokenId2), user0)
-    assert.equal(await instance.ownerOf.call(tokenId3), user0)
+    assert.equal(await instance.ownerOf.call(tokenId3), user1)
 
-    assert.equal(await instance.ownerOf.call(tokenId4), user1)
-    assert.equal(await instance.ownerOf.call(tokenId5), user1)
-
-    await instance.exchangeStars(user0, user1);
+    await instance.exchangeStars(tokenId1, tokenId3, {from: user0});
 
     assert.equal(await instance.ownerOf.call(tokenId1), user1)
-    assert.equal(await instance.ownerOf.call(tokenId2), user1)
-    assert.equal(await instance.ownerOf.call(tokenId3), user1)
-    assert.equal(await instance.ownerOf.call(tokenId4), user0)
-    assert.equal(await instance.ownerOf.call(tokenId5), user0)
+    assert.equal(await instance.ownerOf.call(tokenId3), user0)
 
-    await instance.exchangeStars(user0, user1);
+    await instance.exchangeStars(tokenId1, tokenId2, {from: user1});
 
     assert.equal(await instance.ownerOf.call(tokenId1), user0)
-    assert.equal(await instance.ownerOf.call(tokenId2), user0)
-    assert.equal(await instance.ownerOf.call(tokenId3), user0)
-    assert.equal(await instance.ownerOf.call(tokenId4), user1)
-    assert.equal(await instance.ownerOf.call(tokenId5), user1)
+    assert.equal(await instance.ownerOf.call(tokenId2), user1)
   });
 
   it('Stars Tokens can be transferred from one address to another.', async() => {
