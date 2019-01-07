@@ -491,7 +491,7 @@ const createStar = async () => {
   const instance = web3.eth.contract(contract_abi).at(contract_address);
   const name = document.getElementById("starName").value;
   const id = document.getElementById("starId").value;
-  const result = instance.createStar(name, id, {from: account},(err, res)=>{
+  instance.createStar(name, id, {from: account},(err, res)=>{
     if(!err) {
       App.setStatus(`New Star Owner is ${account}.`);
     }
@@ -502,9 +502,9 @@ const createStar = async () => {
 const lookUptokenIdToStarInfo = async () => {
   const instance = web3.eth.contract(contract_abi).at(contract_address);
   const tokenId = document.getElementById("tokenId").value;
-  const result = instance.lookUptokenIdToStarInfo(tokenId,(err, res)=>{
+  instance.lookUptokenIdToStarInfo(tokenId,(err, res)=>{
     if(!err) {
-      App.setStatus(`The Star name is ${result}.`);
+      App.setStatus(`The Star name is ${res}.`);
     }
   });
 }
